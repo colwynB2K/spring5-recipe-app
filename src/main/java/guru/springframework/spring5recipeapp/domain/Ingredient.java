@@ -1,3 +1,4 @@
+
 package guru.springframework.spring5recipeapp.domain;
 
 import javax.persistence.*;
@@ -11,13 +12,31 @@ public class Ingredient {
     private Long id;
 
     private BigDecimal amount;
-    private String description;
+    private String name;
 
     @OneToOne(fetch = FetchType.EAGER)
     private UnitOfMeasure unitOfMeasure;
 
     @ManyToOne
     private Recipe recipe;
+
+    public Ingredient() {
+    }
+
+    public Ingredient(String name) {
+        this.name = name;
+    }
+
+    public Ingredient(String name, BigDecimal amount) {
+        this.name = name;
+        this.amount = amount;
+    }
+
+    public Ingredient(String name, BigDecimal amount, UnitOfMeasure unitOfMeasure) {
+        this.name = name;
+        this.amount = amount;
+        this.unitOfMeasure = unitOfMeasure;
+    }
 
     public Long getId() {
         return id;
@@ -35,12 +54,12 @@ public class Ingredient {
         this.amount = amount;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String description) {
+        this.name = description;
     }
 
     public UnitOfMeasure getUnitOfMeasure() {

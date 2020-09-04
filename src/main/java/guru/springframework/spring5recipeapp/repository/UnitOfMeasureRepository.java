@@ -9,4 +9,5 @@ public interface UnitOfMeasureRepository extends CrudRepository<UnitOfMeasure, L
 
     Optional<UnitOfMeasure> findByName(String name);
 
+    Optional<UnitOfMeasure> findByUnit(String unit);
 }
