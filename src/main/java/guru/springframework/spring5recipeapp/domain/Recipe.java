@@ -28,10 +28,15 @@ public class Recipe {
     private String url;
     private String yield;
 
-    @ManyToMany(fetch = FetchType.LAZY)                                     // Default fetch type for Many side
-    @JoinTable(name = "recipe_category",                                    // If you don't specify this, Hibernate will generate 2 mapping tables actually and we don't want that! Could be a good idea to use the names of the tables you are associating separated by an _, so developers don't need to look into the table constraint defenitions to figure out to which database columns these foreign keys are pointings
-        joinColumns = @JoinColumn(name = "recipe_id"),                      // Specify the column where the id of this entity will be stored
-        inverseJoinColumns = @JoinColumn(name = "category_id")              // Specify the column where the id of the associated entity will be stored
+    @ManyToMany
+    @JoinTable(name = "recipe_category",                                    // If you don't specify this, Hibernate
+            // will generate 2 mapping tables actually and we don't want that! Could be a good idea to use the names
+            // of the tables you are associating separated by an _, so developers don't need to look into the table
+            // constraint defenitions to figure out to which database columns these foreign keys are pointings
+            joinColumns = @JoinColumn(name = "recipe_id"),                      // Specify the column where the id of
+            // this entity will be stored
+            inverseJoinColumns = @JoinColumn(name = "category_id")              // Specify the column where the id of
+            // the associated entity will be stored
     )
     private Set<Category> categories = new HashSet<>();
 
@@ -130,6 +135,13 @@ public class Recipe {
         this.categories = categories;
     }
 
+    public Recipe addCategory(Category category) {
+        this.categories.add(category);
+        category.getRecipes().add(this);
+
+        return this;
+    }
+
     public Set<Ingredient> getIngredients() {
         return ingredients;
     }
@@ -138,12 +150,33 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+    public Recipe addIngredient(Ingredient ingredient) {
+        this.ingredients.add(ingredient);
+        ingredient.setRecipe(this);
+
+        return this;
+    }
+
+    public Recipe addIngredients(Set<Ingredient> ingredients) {
+        ingredients.stream().forEach(ingredient -> ingredient.setRecipe(this));
+        this.setIngredients(ingredients);
+
+        return this;
+    }
+
     public Notes getNotes() {
         return notes;
     }
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+    }
+
+    public Recipe addNotes(Notes notes) {
+        this.setNotes(notes);
+        notes.setRecipe(this);
+
+        return this;
     }
 
     public String getYield() {

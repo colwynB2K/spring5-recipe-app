@@ -1,6 +1,5 @@
 package guru.springframework.spring5recipeapp.service;
 
-import guru.springframework.spring5recipeapp.domain.Ingredient;
 import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,5 @@ public class RecipeRepositoryServiceImpl implements RecipeService {
         recipeRepository.findAll().iterator().forEachRemaining(recipes::add);
 
         return recipes;
-    }
-
-    @Override
-    public Recipe addIngredientsToRecipe(Recipe recipe, Set<Ingredient> ingredients) {
-        ingredients.stream().forEach(ingredient -> ingredient.setRecipe(recipe));
-        recipe.setIngredients(ingredients);
-
-        return recipe;
     }
 }
