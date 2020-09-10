@@ -1,10 +1,17 @@
 package guru.springframework.spring5recipeapp.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@EqualsAndHashCode(exclude = "recipes")
 @Entity
+// Project Lombok annotation which allows us not to code getter/setters/toString()/equals()
+// /hashCode/RequiredArgsConstructor so you can leave all this code out
 @NamedEntityGraph(name = "Category.recipes",
         attributeNodes = @NamedAttributeNode("recipes")
 )
@@ -20,41 +27,9 @@ public class Category {
     )
     private Set<Recipe> recipes = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
     public Category addRecipe(Recipe recipe) {
         recipe.addCategory(this);
 
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

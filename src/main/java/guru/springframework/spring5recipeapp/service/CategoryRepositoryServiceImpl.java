@@ -2,10 +2,12 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.domain.Category;
 import guru.springframework.spring5recipeapp.repository.CategoryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CategoryRepositoryServiceImpl implements CategoryService {
 
     final private CategoryRepository categoryRepository;

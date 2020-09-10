@@ -7,6 +7,7 @@ import guru.springframework.spring5recipeapp.repository.UnitOfMeasureRepository;
 import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import guru.springframework.spring5recipeapp.service.UnitOfMeasureService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -18,6 +19,7 @@ import java.util.List;
 
 // Use this for adding example data to a test database
 @Component
+@Slf4j
 public class DataInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     private final CategoryRepository categoryRepository;
@@ -44,12 +46,11 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        log.info("Loading Bootstrap Data...");
         recipeRepository.saveAll(getRecipes());
     }
 
     private List<Recipe> getRecipes() {
-        System.out.println("Loading Initial Data...");
-
         List<Recipe> recipes = new ArrayList<>(2);
 
         UnitOfMeasure cup = unitOfMeasureService.getUOMByName("Cup");
@@ -117,7 +118,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
                 "oxidation which will turn the guacamole brown.) Refrigerate until ready to serve.");
 
         recipes.add(perfectGuacamoleRecipe);
-        System.out.println("Loaded: Perfect Guacamole");
+        log.info("Loaded: Perfect Guacamole");
 
         // Spicy Grilled Chicken Tacos recipe
         Recipe spicyGrilledChickenTacosRecipe = new Recipe();
@@ -184,7 +185,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
                 " the thinned sour cream. Serve with lime wedges.");
         recipes.add(spicyGrilledChickenTacosRecipe);
 
-        System.out.println("Loaded: Spicy Grilled Chicken Tacos");
+        log.info("Loaded: Spicy Grilled Chicken Tacos");
 
         return recipes;
     }

@@ -1,9 +1,16 @@
 package guru.springframework.spring5recipeapp.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@EqualsAndHashCode(exclude = {"categories", "notes"})
+// Excluded categories and notes, but left in recipes for equals and hashCode generation as it seems an essential
+// part of the recipe
 @Entity
 public class Recipe {
 
@@ -47,107 +54,11 @@ public class Recipe {
     // One recipe will have only one associated notes record, when we delete the recipe also delete the notes
     private Notes notes;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCookInstructions() {
-        return cookInstructions;
-    }
-
-    public void setCookInstructions(String cookInstructions) {
-        this.cookInstructions = cookInstructions;
-    }
-
-    public Integer getCookTimeMins() {
-        return cookTimeMins;
-    }
-
-    public void setCookTimeMins(Integer cookTimeMins) {
-        this.cookTimeMins = cookTimeMins;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public Byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(Byte[] image) {
-        this.image = image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String description) {
-        this.name = description;
-    }
-
-    public Integer getPrepTimeMins() {
-        return prepTimeMins;
-    }
-
-    public void setPrepTimeMins(Integer prepTimeMins) {
-        this.prepTimeMins = prepTimeMins;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
-    }
-
     public Recipe addCategory(Category category) {
         this.categories.add(category);
         category.getRecipes().add(this);
 
         return this;
-    }
-
-    public Set<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(Set<Ingredient> ingredients) {
-        this.ingredients = ingredients;
     }
 
     public Recipe addIngredient(Ingredient ingredient) {
@@ -164,26 +75,10 @@ public class Recipe {
         return this;
     }
 
-    public Notes getNotes() {
-        return notes;
-    }
-
-    public void setNotes(Notes notes) {
-        this.notes = notes;
-    }
-
     public Recipe addNotes(Notes notes) {
         this.setNotes(notes);
         notes.setRecipe(this);
 
         return this;
-    }
-
-    public String getYield() {
-        return yield;
-    }
-
-    public void setYield(String yield) {
-        this.yield = yield;
     }
 }
