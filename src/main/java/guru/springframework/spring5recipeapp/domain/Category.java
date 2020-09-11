@@ -12,9 +12,9 @@ import java.util.Set;
 @Entity
 // Project Lombok annotation which allows us not to code getter/setters/toString()/equals()
 // /hashCode/RequiredArgsConstructor so you can leave all this code out
-@NamedEntityGraph(name = "Category.recipes",
+/*@NamedEntityGraph(name = "Category.recipes",
         attributeNodes = @NamedAttributeNode("recipes")
-)
+)*/
 public class Category {
 
     @Id
