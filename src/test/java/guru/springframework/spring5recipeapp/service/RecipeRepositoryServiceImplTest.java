@@ -35,9 +35,9 @@ class RecipeRepositoryServiceImplTest {
 
         // when (you call the findAll() method on the mocked repository, return this test set
         when(mockRecipeRepository.findAll()).thenReturn(recipesData);
+        Set<Recipe> recipes = recipeRepositoryService.findAll();                  // When calling the findAll() method on the recipeRepositoryServiceImpl (object under test)
 
         // then
-        Set<Recipe> recipes = recipeRepositoryService.findAll();                  // When calling the findAll() method on the recipeRepositoryServiceImpl (object under test)
         verify(mockRecipeRepository, times(1)).findAll();   // Verify that the findAll() method on the (mocked) repository was called precisely 1 time
         assertEquals(recipes.size(), 1);                                    // Assert that the resulting Recipe Set has only 1 Recipe in it
     }
