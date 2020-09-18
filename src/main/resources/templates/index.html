@@ -39,9 +39,9 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="recipe: ${recipes}">
-                                        <td th:text="${recipe.id}">ID</td>
-                                        <td th:text="${recipe.name}">Name</td>
-                                        <td th:text="${recipe.description}">Description</td>
+                                        <td><a th:text="${recipe.id}" th:href="@{|/recipes/${recipe.id}|}">ID</a></td><!--/* Use literal substituion between | when you need variables inside a context path instead of @{'/recipes/' + ${recipe.id}} */-->
+                                        <td><a th:text="${recipe.name}" th:href="@{|/recipes/${recipe.id}|}">Name</a></td>
+                                        <td><a th:text="${recipe.description}" th:href="@{|/recipes/${recipe.id}|}">Description</a></td>
                                     </tr>
                                 </tbody>
                             </table>
