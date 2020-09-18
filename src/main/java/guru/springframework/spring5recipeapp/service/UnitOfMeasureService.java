@@ -1,8 +1,8 @@
 package guru.springframework.spring5recipeapp.service;
 
-import guru.springframework.spring5recipeapp.domain.UnitOfMeasure;
+import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
 
 public interface UnitOfMeasureService {
 
-    UnitOfMeasure getUOMByName(String name);
+    UnitOfMeasureDTO getUOMByName(String name);
 }

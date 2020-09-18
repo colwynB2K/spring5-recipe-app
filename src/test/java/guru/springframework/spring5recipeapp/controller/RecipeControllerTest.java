@@ -1,6 +1,6 @@
 package guru.springframework.spring5recipeapp.controller;
 
-import guru.springframework.spring5recipeapp.domain.Recipe;
+import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,26 +29,26 @@ class RecipeControllerTest {
 
     MockMvc mockMvc;
 
-    private Recipe recipe;
+    private RecipeDTO recipeDTO;
     private static final Long ID = 1L;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        recipe = new Recipe();
-        recipe.setId(ID);
-        recipe.setName("Spreddel");
+        recipeDTO = new RecipeDTO();
+        recipeDTO.setId(ID);
+        recipeDTO.setName("Spreddel");
     }
 
     @Test
     void showRecipe() throws Exception {
         // when
-        when(mockRecipeService.findById(ID)).thenReturn(recipe);
+        when(mockRecipeService.findById(ID)).thenReturn(recipeDTO);
 
         // then
         mockMvc.perform(get("/recipes/" + ID))
-                .andExpect(model().attribute("recipe", equalTo(recipe)))
+                .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/detail"));
 

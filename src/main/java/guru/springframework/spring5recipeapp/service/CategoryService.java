@@ -1,8 +1,8 @@
 package guru.springframework.spring5recipeapp.service;
 
-import guru.springframework.spring5recipeapp.domain.Category;
+import guru.springframework.spring5recipeapp.dto.CategoryDTO;
 
 public interface CategoryService {
 
-    Category getCategoryByName(String name);
+    CategoryDTO getCategoryByName(String name);
 }

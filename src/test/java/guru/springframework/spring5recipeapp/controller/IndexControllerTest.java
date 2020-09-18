@@ -1,6 +1,7 @@
 package guru.springframework.spring5recipeapp.controller;
 
 import guru.springframework.spring5recipeapp.domain.Recipe;
+import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,11 +52,11 @@ class IndexControllerTest {
     void getIndexPage() {
         // given
         String expectedResult = "index";
-        Set<Recipe> expectedRecipes = new HashSet<>();
-        Recipe expectedRecipe1 = new Recipe();
+        Set<RecipeDTO> expectedRecipes = new HashSet<>();
+        RecipeDTO expectedRecipe1 = new RecipeDTO();
         expectedRecipe1.setName("BLAAT");
 
-        Recipe expectedRecipe2 = new Recipe();
+        RecipeDTO expectedRecipe2 = new RecipeDTO();
         expectedRecipe2.setName("MEKKER");
 
         expectedRecipes.add(expectedRecipe1);

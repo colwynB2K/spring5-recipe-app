@@ -1,6 +1,8 @@
 package guru.springframework.spring5recipeapp.bootstrap;
 
 import guru.springframework.spring5recipeapp.domain.*;
+import guru.springframework.spring5recipeapp.dto.CategoryDTO;
+import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
 import guru.springframework.spring5recipeapp.repository.CategoryRepository;
 import guru.springframework.spring5recipeapp.repository.RecipeRepository;
 import guru.springframework.spring5recipeapp.repository.UnitOfMeasureRepository;
@@ -8,6 +10,7 @@ import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import guru.springframework.spring5recipeapp.service.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -55,16 +58,15 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
     private List<Recipe> getRecipes() {
         List<Recipe> recipes = new ArrayList<>(2);
 
-        UnitOfMeasure cup = unitOfMeasureService.getUOMByName("Cup");
-        UnitOfMeasure dash = unitOfMeasureService.getUOMByName("Dash");
-        UnitOfMeasure tableSpoon = unitOfMeasureService.getUOMByName("Tablespoon");
-        UnitOfMeasure teaSpoon = unitOfMeasureService.getUOMByName("Teaspoon");
+        UnitOfMeasure cup = getUnitOfMeasureByName("Cup");
+        UnitOfMeasure dash = getUnitOfMeasureByName("Dash");
+        UnitOfMeasure tableSpoon = getUnitOfMeasureByName("Tablespoon");
+        UnitOfMeasure teaSpoon = getUnitOfMeasureByName("Teaspoon");
 
-        Category mexicanCategory = categoryService.getCategoryByName("Mexican");
+        Category mexicanCategory = getCategoryByName("Mexican");
 
         // Perfect Guacamole recipe
         Recipe perfectGuacamoleRecipe = new Recipe();
-
         perfectGuacamoleRecipe.addCategory(mexicanCategory);
         perfectGuacamoleRecipe.setName("Perfect Guacamole");
         perfectGuacamoleRecipe.setSource("Simply Recipes Website");
@@ -192,6 +194,23 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         return recipes;
     }
 
+    private UnitOfMeasure getUnitOfMeasureByName(String name) {
+        UnitOfMeasureDTO uomDTO = unitOfMeasureService.getUOMByName(name);
+
+        UnitOfMeasure uom = new UnitOfMeasure();
+        BeanUtils.copyProperties(uomDTO, uom);
+
+        return uom;
+    }
+
+    private Category getCategoryByName(String name) {
+        CategoryDTO categoryDTO = categoryService.getCategoryByName(name);
+
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDTO, category);
+
+        return category;
+    }
 
 
     /*Byte[] convertFileToByArray(File file) {
