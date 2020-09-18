@@ -1,4 +1,3 @@
-
 package guru.springframework.spring5recipeapp.domain;
 
 import lombok.Data;
