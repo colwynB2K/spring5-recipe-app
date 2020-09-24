@@ -2,9 +2,9 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.domain.UnitOfMeasure;
 import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
+import guru.springframework.spring5recipeapp.mapper.UnitOfMeasureMapper;
 import guru.springframework.spring5recipeapp.repository.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +24,6 @@ public class UnitOfMeasureRepositoryServiceImpl implements UnitOfMeasureService 
         UnitOfMeasure unitOfMeasure = unitOfMeasureRepository.findByName(name).orElseThrow(() -> new RuntimeException("UOM " + name + " not " +
                 "found!"));
 
-        UnitOfMeasureDTO unitOfMeasureDTO = new UnitOfMeasureDTO();
-        BeanUtils.copyProperties(unitOfMeasure, unitOfMeasureDTO);
-
-        return unitOfMeasureDTO;
+        return UnitOfMeasureMapper.INSTANCE.UnitOfMeasureToUnitOfMeasureDTO(unitOfMeasure);
     }
 }
