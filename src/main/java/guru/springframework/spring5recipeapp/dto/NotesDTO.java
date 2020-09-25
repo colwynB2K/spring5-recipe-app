@@ -1,6 +1,8 @@
 package guru.springframework.spring5recipeapp.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -8,5 +10,5 @@ import lombok.*;
 public class NotesDTO {
     private Long id;
     private String notes;
-    private RecipeDTO recipe;
+    //private RecipeDTO recipe;
 }

@@ -1,6 +1,8 @@
 package guru.springframework.spring5recipeapp.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -12,5 +14,5 @@ public class IngredientDTO {
     private BigDecimal amount;
     private String name;
     private UnitOfMeasureDTO unitOfMeasure;
-    private RecipeDTO recipe;
+    //private RecipeDTO recipe;
 }
