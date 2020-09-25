@@ -46,4 +46,11 @@ public class RecipeController {
 
         return "redirect:/recipes/" + savedRecipeDTO.getId(); // Use MVC redirect to redirect user to the Recipe Detail page (so the browser should load a new url here)
     }
+
+    @GetMapping("/{recipeId}/delete")
+    public String deleteById(@PathVariable Long recipeId) {
+        recipeService.deleteById(recipeId);
+
+        return "redirect:/";
+    }
 }

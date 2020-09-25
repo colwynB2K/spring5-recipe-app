@@ -121,4 +121,13 @@ class RecipeControllerTest {
 
         verify(mockRecipeService).save(Mockito.any(RecipeDTO.class));
     }
+
+    @Test
+    void deleteById() throws Exception {
+        mockMvc.perform(get("/recipes/" + ID + "/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(mockRecipeService).deleteById(recipeDTO.getId());
+    }
 }

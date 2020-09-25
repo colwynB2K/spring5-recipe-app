@@ -13,7 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,5 +59,15 @@ class RecipeRepositoryServiceImplTest {
         // then
         assertNotNull(actualRecipe);
         verify(mockRecipeRepository).findById(ID);
+    }
+
+    @Test
+    void deleteById() {
+        // when
+        recipeRepositoryService.deleteById(ID);
+        // no 'when' statement for the mockRecipeRepository, since the method has void return type
+
+        // then
+        verify(mockRecipeRepository).deleteById(ID);
     }
 }
