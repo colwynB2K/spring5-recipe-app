@@ -1,6 +1,8 @@
 package guru.springframework.spring5recipeapp.controller;
 
+import guru.springframework.spring5recipeapp.dto.IngredientDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.service.IngredientService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class IngredientControllerTest {
 
     @Mock
+    private IngredientService mockIngredientService;
+
+    @Mock
     private RecipeService mockRecipeService;
 
     @InjectMocks
     private IngredientController ingredientController;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
@@ -37,9 +42,9 @@ class IngredientControllerTest {
     void showListForRecipe() throws Exception {
         // given
         RecipeDTO recipeDTO = new RecipeDTO();
+        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
 
         // when
-        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
         mockMvc.perform(get("/recipes/1/ingredients"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("recipe", recipeDTO))
@@ -47,5 +52,21 @@ class IngredientControllerTest {
 
         // then
         verify(mockRecipeService).findById(anyLong());
+    }
+
+    @Test
+    void showIngredientForRecipe() throws Exception {
+        // given
+        IngredientDTO ingredientDTO = new IngredientDTO();
+        when(mockIngredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientDTO);
+
+        // when
+        mockMvc.perform(get("/recipes/1/ingredients/2"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("ingredient", ingredientDTO))
+                .andExpect(view().name("recipes/ingredients/detail"));
+
+        // then
+        verify(mockIngredientService).findByRecipeIdAndIngredientId(anyLong(), anyLong());
     }
 }
