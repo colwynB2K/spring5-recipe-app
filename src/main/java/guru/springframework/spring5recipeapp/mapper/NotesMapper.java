@@ -3,13 +3,23 @@ package guru.springframework.spring5recipeapp.mapper;
 import guru.springframework.spring5recipeapp.domain.Notes;
 import guru.springframework.spring5recipeapp.dto.NotesDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = {RecipeMapper.class})
 public interface NotesMapper {
-    NotesMapper INSTANCE = Mappers.getMapper(NotesMapper.class);
 
-    Notes NotesDTOToNotes(NotesDTO NotesDTO);
+    @Mappings({
+            @Mapping(target = "recipe.categories", ignore = true),
+            @Mapping(target = "recipe.ingredients", ignore = true),
+            @Mapping(target = "recipe.notes", ignore = true)
+    })
+    NotesDTO toDTO(Notes Notes);
 
-    NotesDTO NotesToNotesDTO(Notes Notes);
+    @Mappings({
+            @Mapping(target = "recipe.categories", ignore = true),
+            @Mapping(target = "recipe.ingredients", ignore = true),
+            @Mapping(target = "recipe.notes", ignore = true)
+    })
+    Notes toEntity(NotesDTO NotesDTO);
 }

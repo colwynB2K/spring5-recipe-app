@@ -2,6 +2,7 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.dto.IngredientDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.mapper.IngredientMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,9 @@ class IngredientServiceImplTest {
     @Mock
     private RecipeService mockRecipeService;
 
+    @Mock
+    IngredientMapper mockIngredientMapper;
+
     @InjectMocks
     private IngredientServiceImpl ingredientServiceImpl;
 
@@ -40,7 +44,7 @@ class IngredientServiceImplTest {
         recipeDTO.setId(recipeId);
         IngredientDTO ingredientDTO = new IngredientDTO();
         ingredientDTO.setId(ingredientId);
-        ingredientDTO.setRecipeId(recipeId);
+        ingredientDTO.setRecipe(recipeDTO);
 
         Set<IngredientDTO> ingredientDTOs = new HashSet<>();
         ingredientDTOs.add(ingredientDTO);

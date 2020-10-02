@@ -15,8 +15,7 @@ public class IngredientDTO {
     private String name;
     private UnitOfMeasureDTO unitOfMeasure;
     private String formattedString;
-    private Long recipeId;
-    //private RecipeDTO recipe;
+    private RecipeDTO recipe;
 
     public String getFormattedString() {
         if (formattedString == null) {

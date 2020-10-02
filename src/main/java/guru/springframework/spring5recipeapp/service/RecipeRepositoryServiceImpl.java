@@ -17,10 +17,12 @@ import java.util.Set;
 public class RecipeRepositoryServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeMapper recipeMapper;
 
     @Autowired
-    public RecipeRepositoryServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeRepositoryServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper) {
         this.recipeRepository = recipeRepository;
+        this.recipeMapper = recipeMapper;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class RecipeRepositoryServiceImpl implements RecipeService {
         Set<RecipeDTO> recipes = new HashSet<>();
         recipeRepository.findAll()
                 .iterator()
-                .forEachRemaining(recipe -> recipes.add(RecipeMapper.INSTANCE.recipeToRecipeDTO(recipe)));
+                .forEachRemaining(recipe -> recipes.add(recipeMapper.toDTO(recipe)));
 
         return recipes;
     }
@@ -37,16 +39,16 @@ public class RecipeRepositoryServiceImpl implements RecipeService {
     public RecipeDTO findById(Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("No Recipe found for id '" + id + "'"));
 
-        return RecipeMapper.INSTANCE.recipeToRecipeDTO(recipe);
+        return recipeMapper.toDTO(recipe);
     }
 
     @Override
     public RecipeDTO save(RecipeDTO recipeDTO) {
-        Recipe recipe = RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO);
+        Recipe recipe = recipeMapper.toEntity(recipeDTO);
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        return RecipeMapper.INSTANCE.recipeToRecipeDTO(savedRecipe);
+        return recipeMapper.toDTO(savedRecipe);
     }
 
     @Override

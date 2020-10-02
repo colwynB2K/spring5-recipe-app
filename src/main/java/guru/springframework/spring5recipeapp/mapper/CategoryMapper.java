@@ -2,14 +2,37 @@ package guru.springframework.spring5recipeapp.mapper;
 
 import guru.springframework.spring5recipeapp.domain.Category;
 import guru.springframework.spring5recipeapp.dto.CategoryDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.*;
 
-@Mapper
+import java.util.Set;
+
+@Mapper(componentModel = "spring", uses = {RecipeMapper.class})
 public interface CategoryMapper {
-    CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    Category CategoryDTOToCategory(CategoryDTO CategoryDTO);
+    @Mappings({
+            @Mapping(target = "recipes", qualifiedByName = "RecipeSetIgnoreChildObjects")
+    })
+    CategoryDTO toDTO(Category category);
 
-    CategoryDTO CategoryToCategoryDTO(Category Category);
+    @Named("CategoryIgnoreRecipes")
+    @Mapping(target = "recipes", ignore = true)
+    CategoryDTO toDTOIgnoreRecipes(Category category);
+
+    @Named("CategorySetIgnoreRecipes")
+    @IterableMapping(qualifiedByName = "CategoryIgnoreRecipes")
+    Set<CategoryDTO> toDTOSetIgnoreRecipes(Set<Category> categories);
+
+    @Mappings({
+            @Mapping(target = "recipes", qualifiedByName = "RecipeSetIgnoreChildObjects")
+    })
+    Category toEntity(CategoryDTO categoryDTO);
+
+    @Named("CategoryIgnoreRecipes")
+    @Mapping(target = "recipes", ignore = true)
+    Category toEntityIgnoreRecipes(CategoryDTO categoryDTO);
+
+    @Named("CategorySetIgnoreRecipes")
+    @IterableMapping(qualifiedByName = "CategoryIgnoreRecipes")
+    Set<Category> toEntitySetIgnoreRecipes(Set<CategoryDTO> categoryDTOs);
+
 }

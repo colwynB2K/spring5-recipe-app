@@ -16,10 +16,12 @@ import java.util.Set;
 public class CategoryRepositoryServiceImpl implements CategoryService {
 
     final private CategoryRepository categoryRepository;
+    final private CategoryMapper categoryMapper;
 
     @Autowired
-    public CategoryRepositoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryRepositoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
@@ -27,13 +29,13 @@ public class CategoryRepositoryServiceImpl implements CategoryService {
         Category category =  categoryRepository.findByName(name).orElseThrow(() -> new RuntimeException("Category " + name + " not " +
                 "found!"));
 
-        return CategoryMapper.INSTANCE.CategoryToCategoryDTO(category);
+        return categoryMapper.toDTO(category);
     }
 
     @Override
     public Set<CategoryDTO> findAll() {
         Set<CategoryDTO> categoryDTOs = new HashSet<>();
-        categoryRepository.findAll().forEach(category -> categoryDTOs.add(CategoryMapper.INSTANCE.CategoryToCategoryDTO(category)));
+        categoryRepository.findAll().forEach(category -> categoryDTOs.add(categoryMapper.toDTO(category)));
 
         return categoryDTOs;
     }

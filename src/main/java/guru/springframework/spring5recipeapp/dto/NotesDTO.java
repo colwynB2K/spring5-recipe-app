@@ -10,5 +10,5 @@ import lombok.Setter;
 public class NotesDTO {
     private Long id;
     private String notes;
-    //private RecipeDTO recipe;
+    private RecipeDTO recipe;
 }

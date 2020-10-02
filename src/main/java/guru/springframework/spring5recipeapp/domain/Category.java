@@ -27,6 +27,14 @@ public class Category {
     )
     private Set<Recipe> recipes = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     public Category addRecipe(Recipe recipe) {
         recipe.addCategory(this);
 

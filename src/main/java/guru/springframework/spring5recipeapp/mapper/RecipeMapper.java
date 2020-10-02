@@ -2,14 +2,49 @@ package guru.springframework.spring5recipeapp.mapper;
 
 import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.*;
 
-@Mapper
+import java.util.Set;
+
+@Mapper(componentModel = "spring", uses = {CategoryMapper.class, IngredientMapper.class, NotesMapper.class})
 public interface RecipeMapper {
-    RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
 
-    Recipe recipeDTOToRecipe(RecipeDTO recipeDTO);
+    @Named("RecipeSetIgnoreChildObjects")
+    @IterableMapping(qualifiedByName = "RecipeIgnoreChildObjects")
+    Set<RecipeDTO> toDTOSetIgnoreChildObjects(Set<Recipe> recipes);
 
-    RecipeDTO recipeToRecipeDTO(Recipe recipe);
+    @Named("RecipeIgnoreChildObjects")
+    @Mappings({
+            @Mapping(target = "categories", ignore = true),
+            @Mapping(target = "ingredients", ignore = true),
+            @Mapping(target = "notes", ignore = true)
+    })
+    RecipeDTO toDTOIgnoreChildObjects(Recipe recipe);
+
+    @Mappings({
+            @Mapping(target = "categories", qualifiedByName = "CategorySetIgnoreRecipes"),
+            @Mapping(target = "ingredients", qualifiedByName = "IngredientSetIgnoreRecipeChildObjects"),
+            @Mapping(target = "notes.recipe", ignore = true)
+    })
+    RecipeDTO toDTO(Recipe recipe);
+
+    @Named("RecipeSetIgnoreChildObjects")
+    @IterableMapping(qualifiedByName = "RecipeIgnoreChildObjects")
+    Set<Recipe> toEntitySetIgnoreChildObjects(Set<RecipeDTO> recipeDTOs);
+
+    @Named("RecipeIgnoreChildObjects")
+    @Mappings({
+            @Mapping(target = "categories", ignore = true),
+            @Mapping(target = "ingredients", ignore = true),
+            @Mapping(target = "notes", ignore = true)
+    })
+    Recipe toEntityIgnoreChildObjects(RecipeDTO recipeDTO);
+
+    @Mappings({
+            @Mapping(target = "categories", qualifiedByName = "CategorySetIgnoreRecipes"),
+            @Mapping(target = "ingredients", qualifiedByName = "IngredientSetIgnoreRecipeChildObjects"),
+            @Mapping(target = "notes.recipe", ignore = true)
+    })
+    Recipe toEntity(RecipeDTO recipeDTO);
+
 }

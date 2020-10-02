@@ -2,6 +2,7 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.mapper.RecipeMapper;
 import guru.springframework.spring5recipeapp.repository.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,17 +24,24 @@ class RecipeRepositoryServiceImplTest {
     private final static Long ID = 1L;
 
     @Mock
-    RecipeRepository mockRecipeRepository;
+    private RecipeRepository mockRecipeRepository;
+
+    @Mock
+    private RecipeMapper mockRecipeMapper;
 
     @InjectMocks
-    RecipeRepositoryServiceImpl recipeRepositoryService;
+    private RecipeRepositoryServiceImpl recipeRepositoryService;
 
     private Recipe recipe;
+    private RecipeDTO recipeDTO;
 
     @BeforeEach
     void setUp() {
         recipe = new Recipe();
         recipe.setId(ID);
+
+        recipeDTO = new RecipeDTO();
+        recipeDTO.setId(ID);
     }
 
     @Test
@@ -42,6 +50,7 @@ class RecipeRepositoryServiceImplTest {
         expectedRecipes.add(new Recipe());
 
         // when (you call the findAll() method on the mocked repository, return this test set
+        when(mockRecipeMapper.toDTO(any(Recipe.class))).thenReturn(recipeDTO);
         when(mockRecipeRepository.findAll()).thenReturn(expectedRecipes);
         Set<RecipeDTO> actualRecipes = recipeRepositoryService.findAll();                  // When calling the findAll() method on the recipeRepositoryServiceImpl (object under test)
 
@@ -54,6 +63,7 @@ class RecipeRepositoryServiceImplTest {
     void findById() {
         //when
         when(mockRecipeRepository.findById(ID)).thenReturn(java.util.Optional.ofNullable(recipe));
+        when(mockRecipeMapper.toDTO(any(Recipe.class))).thenReturn(recipeDTO);
         RecipeDTO actualRecipe = recipeRepositoryService.findById(ID);
 
         // then

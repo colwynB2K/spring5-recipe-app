@@ -22,4 +22,12 @@ public class Notes {
 
     @OneToOne                                               // When deleting notes, don't delete the associated recipe
     private Recipe recipe;
+
+    @Override
+    public String toString() {
+        return "Notes{" +
+                "id=" + id +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }
