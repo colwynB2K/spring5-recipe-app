@@ -9,4 +9,6 @@ public interface UnitOfMeasureService {
     UnitOfMeasureDTO getUOMByName(String name);
 
     Set<UnitOfMeasureDTO> findAll();
+
+    UnitOfMeasureDTO findById(Long id);
 }

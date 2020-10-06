@@ -42,7 +42,7 @@
 
                                 <div class="col-lg-3 form-group">
                                     <label>UOM:</label>
-                                    <select class="form-control" name="uom.id">
+                                    <select class="form-control" name="unitOfMeasure.id">
                                         <option th:each="uom : ${uomList}" th:value="${uom.id}" th:selected="${ingredient.unitOfMeasure != null ? uom.id.equals(ingredient.unitOfMeasure.id) : false}"
                                                 th:text="${uom.name}">Each</option>
                                     </select>

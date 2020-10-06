@@ -2,6 +2,7 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.dto.IngredientDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
 import guru.springframework.spring5recipeapp.exception.ObjectNotFoundException;
 import guru.springframework.spring5recipeapp.mapper.IngredientMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,14 @@ public class IngredientServiceImpl implements IngredientService {
 
     private final RecipeService recipeService;
     private final IngredientMapper ingredientMapper;
+    private final UnitOfMeasureService unitOfMeasureService;
 
     @Autowired
-    public IngredientServiceImpl(RecipeService recipeService, IngredientMapper ingredientMapper) {
+    public IngredientServiceImpl(RecipeService recipeService, IngredientMapper ingredientMapper,
+                                 UnitOfMeasureService unitOfMeasureService) {
         this.recipeService = recipeService;
         this.ingredientMapper = ingredientMapper;
+        this.unitOfMeasureService = unitOfMeasureService;
     }
 
     @Override
@@ -44,11 +48,14 @@ public class IngredientServiceImpl implements IngredientService {
                                                                 .filter(ingredient -> ingredient.getId().equals(ingredientDTO.getId()))
                                                                 .findFirst();
 
+        UnitOfMeasureDTO unitOfMeasureDTO = unitOfMeasureService.findById(ingredientDTO.getUnitOfMeasure().getId());  // The incoming uomDTO will only contain an id from the form select box here
+
         if (recipeIngredientDTO.isPresent()) {
             recipeIngredientDTO.get().setName(ingredientDTO.getName());
             recipeIngredientDTO.get().setAmount(ingredientDTO.getAmount());
-            recipeIngredientDTO.get().setUnitOfMeasure(ingredientDTO.getUnitOfMeasure());
+            recipeIngredientDTO.get().setUnitOfMeasure(unitOfMeasureDTO);
         } else {
+            ingredientDTO.setUnitOfMeasure(unitOfMeasureDTO);   // Enrich the incoming ingredientDTO which only contains a uom id with a fully filled UnitOfMeasureDTO
             recipeDTO.getIngredients().add(ingredientDTO);
         }
 

@@ -43,7 +43,7 @@ public class IngredientController {
     }
 
     @PostMapping("/recipes/{recipeId}/ingredients")
-    public String save(@PathVariable Long recipeId, @ModelAttribute IngredientDTO ingredientDTO) {
+    public String save(@PathVariable Long recipeId, @ModelAttribute IngredientDTO ingredientDTO) {              // The incoming uomDTO will only contain an id from the form select box here
         IngredientDTO savedIngredientDTO = ingredientService.saveIngredientOnRecipe(recipeId, ingredientDTO);
 
         return "redirect:/recipes/" + recipeId + "/ingredients/" + savedIngredientDTO.getId();
