@@ -1,6 +1,7 @@
 package guru.springframework.spring5recipeapp.controller;
 
 import guru.springframework.spring5recipeapp.dto.IngredientDTO;
+import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.IngredientService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import guru.springframework.spring5recipeapp.service.UnitOfMeasureService;
@@ -32,6 +33,18 @@ public class IngredientController {
         model.addAttribute("recipe", recipeService.findById(recipeId));
 
         return "recipes/ingredients/list";
+    }
+
+    @GetMapping("/recipes/{recipeId}/ingredients/new")
+    public String showNewIngredientFormForRecipe(@PathVariable Long recipeId, Model model) {
+        IngredientDTO ingredientDTO = new IngredientDTO();
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setId(recipeId);
+        ingredientDTO.setRecipe(recipeDTO);
+        model.addAttribute("ingredient", ingredientDTO);
+        model.addAttribute("uomList", unitOfMeasureService.findAll());
+
+        return "recipes/ingredients/form";
     }
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}")

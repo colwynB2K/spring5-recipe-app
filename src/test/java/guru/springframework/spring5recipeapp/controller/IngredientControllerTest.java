@@ -45,25 +45,31 @@ class IngredientControllerTest {
     private MockMvc mockMvc;
 
     private Long recipeId = 2L;
+    private Set<UnitOfMeasureDTO> uomList;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+
+        uomList = new HashSet<>();
+        UnitOfMeasureDTO unitOfMeasureDTO = new UnitOfMeasureDTO();
+        uomList.add(unitOfMeasureDTO);
     }
 
     @Test
     void showListForRecipe() throws Exception {
         // given
         RecipeDTO recipeDTO = new RecipeDTO();
-        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
+
 
         // when
+        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
+
+        // then
         mockMvc.perform(get("/recipes/1/ingredients"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("recipe", recipeDTO))
                 .andExpect(view().name("recipes/ingredients/list"));
-
-        // then
         verify(mockRecipeService).findById(anyLong());
     }
 
@@ -71,24 +77,36 @@ class IngredientControllerTest {
     void showIngredientForRecipe() throws Exception {
         // given
         IngredientDTO ingredientDTO = new IngredientDTO();
-        Set<UnitOfMeasureDTO> uomList = new HashSet<>();
-        UnitOfMeasureDTO unitOfMeasureDTO = new UnitOfMeasureDTO();
-        uomList.add(unitOfMeasureDTO);
 
-        //when(mockIngredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientDTO);
+        // when
         when(mockIngredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientDTO);
         when(mockUnitOfMeasureService.findAll()).thenReturn(uomList);
 
-        // when
+        // then
         mockMvc.perform(get("/recipes/1/ingredients/2"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("ingredient", ingredientDTO))
                 .andExpect(model().attribute("uomList", uomList))
                 .andExpect(view().name("recipes/ingredients/form"));
+        verify(mockIngredientService).findByRecipeIdAndIngredientId(anyLong(), anyLong());
+        verify(mockUnitOfMeasureService).findAll();
+    }
+
+    @Test
+    void showNewIngredientForm() throws Exception {
+        // given
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setId(recipeId);
+
+        // when
+        when(mockUnitOfMeasureService.findAll()).thenReturn(uomList);
 
         // then
-        //verify(mockIngredientService).findByRecipeIdAndIngredientId(anyLong(), anyLong());
-        verify(mockIngredientService).findByRecipeIdAndIngredientId(anyLong(), anyLong());
+        mockMvc.perform(get("/recipes/1/ingredients/new"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attribute("uomList", uomList))
+                .andExpect(view().name("recipes/ingredients/form"));
         verify(mockUnitOfMeasureService).findAll();
     }
 
