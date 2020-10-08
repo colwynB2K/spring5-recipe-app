@@ -1,9 +1,11 @@
 package guru.springframework.spring5recipeapp.service;
 
+import guru.springframework.spring5recipeapp.domain.Ingredient;
 import guru.springframework.spring5recipeapp.dto.IngredientDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
 import guru.springframework.spring5recipeapp.mapper.IngredientMapper;
+import guru.springframework.spring5recipeapp.repository.IngredientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +32,15 @@ class IngredientServiceImplTest {
     private UnitOfMeasureService mockUnitOfMeasureService;
 
     @Mock
+    IngredientRepository mockIngredientRepository;
+
+    @Mock
     IngredientMapper mockIngredientMapper;
 
     @InjectMocks
     private IngredientServiceImpl ingredientServiceImpl;
 
+    private Ingredient ingredient;
     private IngredientDTO ingredientDTO;
     private RecipeDTO recipeDTO;
 
@@ -47,12 +53,14 @@ class IngredientServiceImplTest {
         recipeDTO = new RecipeDTO();
         recipeDTO.setId(recipeId);
 
+        ingredient = new Ingredient();
+        ingredient.setId(ingredientId);
         ingredientDTO = new IngredientDTO();
         ingredientDTO.setId(ingredientId);
     }
 
     @Test
-    void findByRecipeIdAndIngredientId() {
+    void findById() {
         // given
         ingredientDTO.setRecipe(recipeDTO);
 
@@ -61,11 +69,13 @@ class IngredientServiceImplTest {
         recipeDTO.setIngredients(ingredientDTOs);
 
         // when
-        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
-        IngredientDTO actualIngredientDTO = ingredientServiceImpl.findByRecipeIdAndIngredientId(recipeId, ingredientId);
+        when(mockIngredientRepository.findById(ingredientId)).thenReturn(java.util.Optional.ofNullable(ingredient));
+        when(mockIngredientMapper.toDTO(ingredient)).thenReturn(ingredientDTO);
+        IngredientDTO actualIngredientDTO = ingredientServiceImpl.findById(ingredientId);
 
-        verify(mockRecipeService).findById(recipeId);
-        assertEquals(ingredientDTO, actualIngredientDTO);
+        verify(mockIngredientRepository).findById(ingredientId);
+        verify(mockIngredientMapper).toDTO(ingredient);
+        assertEquals(ingredientId, actualIngredientDTO.getId());
     }
 
     @Test

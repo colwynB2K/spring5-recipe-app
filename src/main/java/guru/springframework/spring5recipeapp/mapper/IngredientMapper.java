@@ -9,6 +9,8 @@ import java.util.Set;
 @Mapper(componentModel = "spring", uses = {RecipeMapper.class})
 public interface IngredientMapper {
 
+    IngredientDTO toDTO(Ingredient ingredient);
+
     @Named("IngredientIgnoreRecipeChildObjects")
     @Mappings({
             @Mapping(target = "recipe.categories", ignore = true),
@@ -32,5 +34,4 @@ public interface IngredientMapper {
     @Named("IngredientSetIgnoreRecipeChildObjects")
     @IterableMapping(qualifiedByName = "IngredientIgnoreRecipeChildObjects")
     Set<Ingredient> toEntitySetIgnoreRecipeChildObjects(Set<IngredientDTO> ingredientDTOs);
-
 }

@@ -79,7 +79,7 @@ class IngredientControllerTest {
         IngredientDTO ingredientDTO = new IngredientDTO();
 
         // when
-        when(mockIngredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientDTO);
+        when(mockIngredientService.findById(anyLong())).thenReturn(ingredientDTO);
         when(mockUnitOfMeasureService.findAll()).thenReturn(uomList);
 
         // then
@@ -88,7 +88,7 @@ class IngredientControllerTest {
                 .andExpect(model().attribute("ingredient", ingredientDTO))
                 .andExpect(model().attribute("uomList", uomList))
                 .andExpect(view().name("recipes/ingredients/form"));
-        verify(mockIngredientService).findByRecipeIdAndIngredientId(anyLong(), anyLong());
+        verify(mockIngredientService).findById(anyLong());
         verify(mockUnitOfMeasureService).findAll();
     }
 
@@ -126,5 +126,13 @@ class IngredientControllerTest {
                         .param("name", "Eye of noot")
                     ).andExpect(status().is3xxRedirection())
                     .andExpect(view().name("redirect:/recipes/2/ingredients/3"));
+    }
+
+    @Test
+    void deleteIngredientFromRecipe() throws Exception {
+        mockMvc.perform(get("/recipes/2/ingredients/8/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes/2/ingredients"));
+        verify(mockIngredientService).deleteById(anyLong());
     }
 }

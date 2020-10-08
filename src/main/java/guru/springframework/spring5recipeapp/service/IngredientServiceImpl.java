@@ -1,10 +1,12 @@
 package guru.springframework.spring5recipeapp.service;
 
+import guru.springframework.spring5recipeapp.domain.Ingredient;
 import guru.springframework.spring5recipeapp.dto.IngredientDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.dto.UnitOfMeasureDTO;
 import guru.springframework.spring5recipeapp.exception.ObjectNotFoundException;
 import guru.springframework.spring5recipeapp.mapper.IngredientMapper;
+import guru.springframework.spring5recipeapp.repository.IngredientRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,27 +18,25 @@ import java.util.Optional;
 public class IngredientServiceImpl implements IngredientService {
 
     private final RecipeService recipeService;
-    private final IngredientMapper ingredientMapper;
+    private final IngredientRepository ingredientRepository;
     private final UnitOfMeasureService unitOfMeasureService;
 
+    private final IngredientMapper ingredientMapper;
+
     @Autowired
-    public IngredientServiceImpl(RecipeService recipeService, IngredientMapper ingredientMapper,
-                                 UnitOfMeasureService unitOfMeasureService) {
+    public IngredientServiceImpl(RecipeService recipeService, IngredientRepository ingredientRepository,
+                                 UnitOfMeasureService unitOfMeasureService, IngredientMapper ingredientMapper) {
         this.recipeService = recipeService;
-        this.ingredientMapper = ingredientMapper;
+        this.ingredientRepository = ingredientRepository;
         this.unitOfMeasureService = unitOfMeasureService;
+        this.ingredientMapper = ingredientMapper;
     }
 
     @Override
-    public IngredientDTO findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
-        RecipeDTO recipeDTO = recipeService.findById(recipeId);
+    public IngredientDTO findById(Long ingredientId) {
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new ObjectNotFoundException("No ingredient found for id ' " + ingredientId + "'"));
 
-        Optional<IngredientDTO> ingredientDTOOptional = recipeDTO.getIngredients()
-                .stream()
-                .filter(ingredientDTO -> ingredientId.equals(ingredientDTO.getId()))
-                .findFirst();
-
-        return ingredientDTOOptional.orElseThrow(() -> new ObjectNotFoundException("No ingredient found for id ' " + ingredientId + "'"));
+        return ingredientMapper.toDTO(ingredient);
     }
 
     @Override
@@ -86,4 +86,10 @@ public class IngredientServiceImpl implements IngredientService {
 
         return savedIngredientOptional.get();
     }
+
+    @Override
+    public void deleteById(Long ingredientId) {
+       ingredientRepository.deleteById(ingredientId);
+    }
+
 }
