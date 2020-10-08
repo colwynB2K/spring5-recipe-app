@@ -1,13 +1,13 @@
 package guru.springframework.spring5recipeapp.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Data
-@EqualsAndHashCode(exclude = "recipe")
+@Getter
+@Setter
 @Entity
 public class Ingredient {
 
@@ -40,6 +40,23 @@ public class Ingredient {
         this.name = name;
         this.amount = amount;
         this.unitOfMeasure = unitOfMeasure;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Ingredient))
+            return false;
+
+        Ingredient other = (Ingredient) o;
+
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
     }
 
     @Override

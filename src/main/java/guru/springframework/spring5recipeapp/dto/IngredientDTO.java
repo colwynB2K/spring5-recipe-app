@@ -39,4 +39,21 @@ public class IngredientDTO {
 
         this.formattedString = formattedString.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof IngredientDTO))
+            return false;
+
+        IngredientDTO other = (IngredientDTO) o;
+
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }
