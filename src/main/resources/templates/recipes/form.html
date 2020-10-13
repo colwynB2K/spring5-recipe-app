@@ -41,9 +41,15 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-3">
+                                        <h5><label>Name:</label></h5>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" th:field="*{name}" placeholder="Recipe Name"/>
+                                    </div>
+                                    <div class="col-lg-3">
                                         <h5><label>Categories:</label></h5>
                                     </div>
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-3">
                                         <div class="radio" th:each="category: ${categories}">
                                             <label>
                                                 <!-- TODO: Do we need a name on this checkbox to be able to save those values? -->
@@ -70,7 +76,20 @@
                                         <h5><label>Difficulty:</label></h5>
                                     </div>
                                     <div class="col-lg-3">
-                                        <select class="form-control">
+                                        <!--/*
+                                            Iterate over the values of an Enum by referring to its FQDN
+                                            Thymeleaf is able to call the equals() method on the difficulty object and
+                                            if it is equals it will set that value as selected, so we don't need to code that part!
+                                        */-->
+                                        <select class="form-control" th:field="*{difficulty}">
+                                            <option th:each="difficultyValue : ${T(guru.springframework.spring5recipeapp.domain.Difficulty).values()}"
+                                                    th:value="${difficultyValue.name()}"
+                                                    th:text="${difficultyValue.name()}"
+                                            >
+                                                DIFFICULTY_NAME
+                                            </option>
+                                        </select>
+                                        <select class="form-control" th:remove="all">
                                             <option>Easy</option>
                                             <option>Medium</option>
                                             <option>Hard</option>

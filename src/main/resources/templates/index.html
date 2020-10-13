@@ -36,12 +36,16 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
                                 </thead>
                                 <tbody>
                                     <tr th:each="recipe: ${recipes}">
                                         <td><a th:text="${recipe.id}" th:href="@{|/recipes/${recipe.id}|}">ID</a></td><!--/* Use literal substituion between | when you need variables inside a context path instead of @{'/recipes/' + ${recipe.id}} */-->
                                         <td><a th:text="${recipe.name}" th:href="@{|/recipes/${recipe.id}|}">Name</a></td>
                                         <td><a th:text="${recipe.description}" th:href="@{|/recipes/${recipe.id}|}">Description</a></td>
+                                        <td><a th:href="@{|/recipes/edit/${recipe.id}|}">Update</a></td>
+                                        <td><a th:href="@{|/recipes/${recipe.id}/delete|}">Delete</a></td>
                                     </tr>
                                 </tbody>
                             </table>
