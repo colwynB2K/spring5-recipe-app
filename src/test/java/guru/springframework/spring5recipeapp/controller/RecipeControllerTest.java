@@ -3,27 +3,29 @@ package guru.springframework.spring5recipeapp.controller;
 import guru.springframework.spring5recipeapp.dto.CategoryDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.CategoryService;
+import guru.springframework.spring5recipeapp.service.ImageService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +36,9 @@ class RecipeControllerTest {
 
     @Mock
     private CategoryService mockCategoryService;
+
+    @Mock
+    ImageService mockImageService;
 
     @InjectMocks
     private RecipeController recipeController;
@@ -96,7 +101,7 @@ class RecipeControllerTest {
 
         // then
         mockMvc.perform(get("/recipes/edit"))
-                .andExpect(model().attribute("recipe", any(RecipeDTO.class)))
+                .andExpect(model().attributeExists("recipe"))
                 .andExpect(model().attribute("categories", equalTo(categoryDTOs)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/form"));
@@ -107,7 +112,7 @@ class RecipeControllerTest {
     @Test
     void saveRecipe() throws Exception {
         // when
-        when(mockRecipeService.save(Mockito.any(RecipeDTO.class))).thenReturn(recipeDTO);
+        when(mockRecipeService.save(any(RecipeDTO.class))).thenReturn(recipeDTO);
 
         // then
         mockMvc.perform(
@@ -119,7 +124,7 @@ class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/" + ID));
 
-        verify(mockRecipeService).save(Mockito.any(RecipeDTO.class));
+        verify(mockRecipeService).save(any(RecipeDTO.class));
     }
 
     @Test
@@ -129,5 +134,34 @@ class RecipeControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         verify(mockRecipeService).deleteById(recipeDTO.getId());
+    }
+
+    @Test
+    void showImageForm() throws Exception {
+        // when
+        when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
+
+        // then
+        mockMvc.perform(get("/recipes/1/image"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
+                .andExpect(view().name("recipes/images/form"));
+
+        verify(mockRecipeService).findById(anyLong());
+    }
+
+    @Test
+    void handleImagePost() throws Exception {
+        // given
+        Long recipeId = 1L;
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain", "Spring Framework Guru".getBytes());
+
+        // then
+        mockMvc.perform(multipart("/recipes/" + recipeId + "/image").file(mockMultipartFile))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("location", "/recipes/1"))
+                .andExpect(view().name("redirect:/recipes/" + recipeId));
+
+        verify(mockImageService).saveOnRecipe(anyLong(), any(MultipartFile.class));
     }
 }

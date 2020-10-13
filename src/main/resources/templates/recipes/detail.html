@@ -29,16 +29,21 @@
                 <div class="card">
                     <div class="card-header text-white bg-primary">
                         <h1 class="card-title" th:text="${recipe.name}">Recipe Name Here!</h1>
+                        <a class="btn btn-secondary" href="#" th:href="@{'/recipes/' + ${recipe.id} + '/image'}" role="button">Change Image</a>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3">
                                 <h5>Categories:</h5>
                             </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-3">
                                 <ul th:each="category: ${recipe.categories}">
                                     <li th:text="${category.name}">category name</li>
                                 </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <img th:src="@{/images/guacamole-static.jpg}"
+                                        src="../../static/images/guacamole-static.jpg" width="200" height="200">
                             </div>
                         </div>
                         <div class="row">
