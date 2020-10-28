@@ -145,7 +145,7 @@ class RecipeControllerTest {
         when(mockRecipeService.findById(anyLong())).thenReturn(recipeDTO);
 
         // then
-        mockMvc.perform(get("/recipes/1/image"))
+        mockMvc.perform(get("/recipes/1/image/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(view().name("recipes/images/form"));
