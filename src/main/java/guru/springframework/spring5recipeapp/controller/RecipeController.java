@@ -4,11 +4,18 @@ import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.ImageService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 @RequestMapping("/recipes")
@@ -58,7 +65,7 @@ public class RecipeController {
         return "redirect:/";
     }
 
-    @GetMapping("/{recipeId}/image")
+    @GetMapping("/{recipeId}/image/edit")
     public String showImageUploadForm(@PathVariable Long recipeId, Model model) {
         model.addAttribute("recipe", recipeService.findById(recipeId));
 
@@ -70,5 +77,17 @@ public class RecipeController {
         imageService.saveOnRecipe(recipeId, imageFile);
 
         return "redirect:/recipes/" + recipeId;
+    }
+
+    @GetMapping("/{recipeId}/image")
+    public void showImage(@PathVariable Long recipeId, HttpServletResponse response) throws IOException {
+        RecipeDTO recipeDTO = recipeService.findById(recipeId);
+        byte[] bytes = ArrayUtils.toPrimitive(recipeDTO.getImage());    // Convert Byte[] to byte[]
+
+        if (bytes != null) {
+            InputStream is = new ByteArrayInputStream(bytes);               // copy the bytes to the response outputstream
+            response.setContentType("image/jpeg");
+            IOUtils.copy(is, response.getOutputStream());
+        }
     }
 }

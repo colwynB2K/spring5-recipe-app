@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-header text-white bg-primary">
                         <h1 class="card-title" th:text="${recipe.name}">Recipe Name Here!</h1>
-                        <a class="btn btn-secondary" href="#" th:href="@{'/recipes/' + ${recipe.id} + '/image'}" role="button">Change Image</a>
+                        <a class="btn btn-secondary" href="#" th:href="@{'/recipes/' + ${recipe.id} + '/image/edit'}" role="button">Change Image</a>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -42,7 +42,7 @@
                                 </ul>
                             </div>
                             <div class="col-lg-6">
-                                <img th:src="@{/images/guacamole-static.jpg}"
+                                <img th:src="@{'/recipes/'+ ${recipe.id}+ '/image'}"
                                         src="../../static/images/guacamole-static.jpg" width="200" height="200">
                             </div>
                         </div>

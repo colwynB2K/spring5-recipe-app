@@ -5,6 +5,7 @@ import guru.springframework.spring5recipeapp.dto.RecipeDTO;
 import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.ImageService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -163,5 +166,24 @@ class RecipeControllerTest {
                 .andExpect(view().name("redirect:/recipes/" + recipeId));
 
         verify(mockImageService).saveOnRecipe(anyLong(), any(MultipartFile.class));
+    }
+
+    @Test
+    void renderImageFromDB() throws Exception {
+        //given
+        Long recipeId = 1L;
+        String s = "fake Image content";
+        recipeDTO.setImage(ArrayUtils.toObject(s.getBytes()));
+        when(mockRecipeService.findById(recipeId)).thenReturn(recipeDTO);
+
+        // when
+        MockHttpServletResponse response = mockMvc.perform(get("/recipes/" + recipeId + "/image"))
+                                                .andExpect(status().isOk())
+                                                .andReturn().getResponse();
+
+        byte[] responseBytes = response.getContentAsByteArray();
+
+        // then
+        assertEquals(s.getBytes().length, responseBytes.length);
     }
 }
