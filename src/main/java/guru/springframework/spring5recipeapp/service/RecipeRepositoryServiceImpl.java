@@ -37,7 +37,7 @@ public class RecipeRepositoryServiceImpl implements RecipeService {
 
     @Override
     public RecipeDTO findById(Long id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("No Recipe found for id '" + id + "'"));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("No Recipe found for id: " + id + ""));
 
         return recipeMapper.toDTO(recipe);
     }

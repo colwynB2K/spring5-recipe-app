@@ -98,9 +98,11 @@ public class RecipeController {
 
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleObjectNotFound() {
+    public ModelAndView handleObjectNotFound(Exception exception) {
         log.warn("Handling not found exception");
+        log.warn(exception.getMessage());
         ModelAndView mav = new ModelAndView("404");
+        mav.addObject("exception", exception);
 
         return mav;
     }
