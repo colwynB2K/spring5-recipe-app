@@ -89,7 +89,8 @@ class RecipeControllerTest {
 
         // when
         mockMvc.perform(get("/recipes/" + ID))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"));
     }
 
     @Test

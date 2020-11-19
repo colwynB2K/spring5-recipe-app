@@ -1,22 +1,27 @@
 package guru.springframework.spring5recipeapp.controller;
 
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.exception.ObjectNotFoundException;
 import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.ImageService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Slf4j
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
@@ -89,5 +94,14 @@ public class RecipeController {
             response.setContentType("image/jpeg");
             IOUtils.copy(is, response.getOutputStream());
         }
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ModelAndView handleObjectNotFound() {
+        log.warn("Handling not found exception");
+        ModelAndView mav = new ModelAndView("404");
+
+        return mav;
     }
 }
