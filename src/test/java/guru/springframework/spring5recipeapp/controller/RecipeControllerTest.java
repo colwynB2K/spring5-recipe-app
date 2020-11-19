@@ -94,6 +94,14 @@ class RecipeControllerTest {
     }
 
     @Test
+    void showRecipeDetail_Should_Return_A_400_For_String_Id() throws Exception {
+        // when
+        mockMvc.perform(get("/recipes/sterre"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400"));
+    }
+
+    @Test
     void showRecipeForm_For_Specified_Recipe_Id() throws Exception {
         // given
         when(mockRecipeService.findById(ID)).thenReturn(recipeDTO);

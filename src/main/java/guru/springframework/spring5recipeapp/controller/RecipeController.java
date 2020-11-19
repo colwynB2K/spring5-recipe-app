@@ -98,10 +98,21 @@ public class RecipeController {
 
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleObjectNotFound(Exception exception) {
-        log.warn("Handling not found exception");
+    public ModelAndView handleObjectNotFoundException(Exception exception) {
+        log.warn("Handling ObjectNotFoundException");
         log.warn(exception.getMessage());
         ModelAndView mav = new ModelAndView("404");
+        mav.addObject("exception", exception);
+
+        return mav;
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleNumberFormatException(Exception exception) {
+        log.warn("Handling NumberFormatException");
+        log.warn(exception.getMessage());
+        ModelAndView mav = new ModelAndView("400");
         mav.addObject("exception", exception);
 
         return mav;
