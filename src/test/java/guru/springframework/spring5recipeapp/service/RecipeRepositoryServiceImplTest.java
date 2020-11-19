@@ -2,6 +2,7 @@ package guru.springframework.spring5recipeapp.service;
 
 import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.exception.ObjectNotFoundException;
 import guru.springframework.spring5recipeapp.mapper.RecipeMapper;
 import guru.springframework.spring5recipeapp.repository.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,12 +46,13 @@ class RecipeRepositoryServiceImplTest {
 
     @Test
     void findAll() {
+        // given
         Set<Recipe> expectedRecipes = new HashSet<>();
         expectedRecipes.add(new Recipe());
-
-        // when (you call the findAll() method on the mocked repository, return this test set
         when(mockRecipeMapper.toDTO(any(Recipe.class))).thenReturn(recipeDTO);
         when(mockRecipeRepository.findAll()).thenReturn(expectedRecipes);
+
+        // when
         Set<RecipeDTO> actualRecipes = recipeRepositoryService.findAll();                  // When calling the findAll() method on the recipeRepositoryServiceImpl (object under test)
 
         // then
@@ -61,9 +62,11 @@ class RecipeRepositoryServiceImplTest {
 
     @Test
     void findById() {
-        //when
+        // given
         when(mockRecipeRepository.findById(ID)).thenReturn(java.util.Optional.ofNullable(recipe));
         when(mockRecipeMapper.toDTO(any(Recipe.class))).thenReturn(recipeDTO);
+
+        // when
         RecipeDTO actualRecipe = recipeRepositoryService.findById(ID);
 
         // then
@@ -72,10 +75,23 @@ class RecipeRepositoryServiceImplTest {
     }
 
     @Test
+    void findById_Should_Throw_ObjectNotFoundException_For_Unknown_Id() {
+        // given
+        when(mockRecipeRepository.findById(anyLong())).thenReturn(java.util.Optional.empty());
+
+        // when
+        ObjectNotFoundException e = assertThrows(ObjectNotFoundException.class, () -> recipeRepositoryService.findById(ID));
+
+        // then
+        assertEquals("No Recipe found for id '" + ID + "'", e.getMessage());
+    }
+
+    @Test
     void deleteById() {
+        // no 'when' statement for the mockRecipeRepository, since the delete method has void return type
+
         // when
         recipeRepositoryService.deleteById(ID);
-        // no 'when' statement for the mockRecipeRepository, since the method has void return type
 
         // then
         verify(mockRecipeRepository).deleteById(ID);

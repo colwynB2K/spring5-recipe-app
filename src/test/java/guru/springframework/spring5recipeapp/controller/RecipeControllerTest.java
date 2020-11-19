@@ -2,6 +2,7 @@ package guru.springframework.spring5recipeapp.controller;
 
 import guru.springframework.spring5recipeapp.dto.CategoryDTO;
 import guru.springframework.spring5recipeapp.dto.RecipeDTO;
+import guru.springframework.spring5recipeapp.exception.ObjectNotFoundException;
 import guru.springframework.spring5recipeapp.service.CategoryService;
 import guru.springframework.spring5recipeapp.service.ImageService;
 import guru.springframework.spring5recipeapp.service.RecipeService;
@@ -67,57 +68,70 @@ class RecipeControllerTest {
     }
 
     @Test
-    void showRecipe() throws Exception {
-        // when
+    void showRecipeDetail() throws Exception {
+        // given
         when(mockRecipeService.findById(ID)).thenReturn(recipeDTO);
 
-        // then
+        // whwn
         mockMvc.perform(get("/recipes/" + ID))
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/detail"));
 
+        // then
         verify(mockRecipeService).findById(ID);
     }
 
     @Test
-    void showRecipeForm_For_Specified_Recipe_Id() throws Exception {
+    void showRecipeDetail_Should_Return_A_404_For_Unknown_Id() throws Exception {
+        // given
+        when(mockRecipeService.findById(anyLong())).thenThrow(ObjectNotFoundException.class);
+
         // when
+        mockMvc.perform(get("/recipes/" + ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void showRecipeForm_For_Specified_Recipe_Id() throws Exception {
+        // given
         when(mockRecipeService.findById(ID)).thenReturn(recipeDTO);
         when(mockCategoryService.findAll()).thenReturn(categoryDTOs);
 
-        // then
+        // when
         mockMvc.perform(get("/recipes/edit/" + ID))
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(model().attribute("categories", equalTo(categoryDTOs)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/form"));
 
+        // then
         verify(mockRecipeService).findById(ID);
         verify(mockCategoryService).findAll();
     }
 
     @Test
     void showRecipeForm_When_RecipeId_Is_Null() throws Exception {
-        // when
+        // given
         when(mockCategoryService.findAll()).thenReturn(categoryDTOs);
 
-        // then
+        // when
         mockMvc.perform(get("/recipes/edit"))
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(model().attribute("categories", equalTo(categoryDTOs)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/form"));
 
+        // then
         verify(mockCategoryService).findAll();
     }
 
     @Test
     void saveRecipe() throws Exception {
-        // when
+        // given
         when(mockRecipeService.save(any(RecipeDTO.class))).thenReturn(recipeDTO);
 
-        // then
+        // when
         mockMvc.perform(
                     post("/recipes")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -127,6 +141,7 @@ class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/" + ID));
 
+        // then
         verify(mockRecipeService).save(any(RecipeDTO.class));
     }
 
