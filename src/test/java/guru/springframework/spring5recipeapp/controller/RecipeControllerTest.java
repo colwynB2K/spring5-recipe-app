@@ -56,7 +56,9 @@ class RecipeControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
+                                    .setControllerAdvice(new ControllerExceptionHandler())
+                                    .build();
 
         recipeDTO = new RecipeDTO();
         recipeDTO.setId(ID);
@@ -193,7 +195,7 @@ class RecipeControllerTest {
     }
 
     @Test
-    void renderImageFromDB() throws Exception {
+    void showImage() throws Exception {
         //given
         Long recipeId = 1L;
         String s = "fake Image content";
@@ -209,5 +211,13 @@ class RecipeControllerTest {
 
         // then
         assertEquals(s.getBytes().length, responseBytes.length);
+    }
+
+    @Test
+    void showImage_Should_Return_A_400_For_String_Id() throws Exception {
+        // when
+        mockMvc.perform(get("/recipes/sterre/image"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400"));
     }
 }

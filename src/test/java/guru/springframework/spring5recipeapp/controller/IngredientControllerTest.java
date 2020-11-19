@@ -49,7 +49,9 @@ class IngredientControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
 
         uomList = new HashSet<>();
         UnitOfMeasureDTO unitOfMeasureDTO = new UnitOfMeasureDTO();
