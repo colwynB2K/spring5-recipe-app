@@ -83,7 +83,7 @@ class RecipeRepositoryServiceImplTest {
         ObjectNotFoundException e = assertThrows(ObjectNotFoundException.class, () -> recipeRepositoryService.findById(ID));
 
         // then
-        assertEquals("No Recipe found for id '" + ID + "'", e.getMessage());
+        assertEquals("No Recipe found for id: " + ID, e.getMessage());
     }
 
     @Test
