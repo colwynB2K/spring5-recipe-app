@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +27,14 @@ import java.io.InputStream;
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
+
+    public static final String VIEWS_400 = "400";
+    public static final String VIEWS_404 = "404";
+    public static final String VIEWS_RECIPES_DETAIL = "recipes/detail";
+    public static final String VIEWS_RECIPES_FORM = "recipes/form";
+    public static final String VIEWS_RECIPES_IMAGES_FORM = "recipes/images/form";
+    public static final String VIEWS_RECIPES_REDIRECT = "redirect:/recipes/";
+    public static final String VIEWS_ROOT_REDIRECT = "redirect:/";
 
     private final CategoryService categoryService;
     private final RecipeService recipeService;
@@ -41,7 +51,7 @@ public class RecipeController {
     public String showRecipeDetail(@PathVariable Long recipeId, Model model) {
         model.addAttribute("recipe", recipeService.findById(recipeId));
 
-        return "recipes/detail";
+        return VIEWS_RECIPES_DETAIL;
     }
 
     @GetMapping({"/edit", "/edit/{recipeId}"})
@@ -53,35 +63,44 @@ public class RecipeController {
         }
         model.addAttribute("categories", categoryService.findAll());
 
-        return "recipes/form";
+        return VIEWS_RECIPES_FORM;
     }
 
     @PostMapping("")
-    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO) {
-        RecipeDTO savedRecipeDTO = recipeService.save(recipeDTO);
+    public String saveRecipe(@Valid @ModelAttribute RecipeDTO recipe, BindingResult bindingResult, Model model) {   // Add @Valid to the Modelattribute parameter to trigger Bean Validation. Make sure to add the model attribute name if it doesn't match the parameter name. Add BindingResult parameters which will contains the validation result.
 
-        return "redirect:/recipes/" + savedRecipeDTO.getId(); // Use MVC redirect to redirect user to the Recipe Detail page (so the browser should load a new url here)
+        // Check validation result, log any validation errors and in that case return to the recipe form
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            model.addAttribute("recipe", recipe);
+
+            return VIEWS_RECIPES_FORM;
+        }
+
+        RecipeDTO savedRecipeDTO = recipeService.save(recipe);
+
+        return VIEWS_RECIPES_REDIRECT + savedRecipeDTO.getId(); // Use MVC redirect to redirect user to the Recipe Detail page (so the browser should load a new url here)
     }
 
     @GetMapping("/{recipeId}/delete")
     public String deleteById(@PathVariable Long recipeId) {
         recipeService.deleteById(recipeId);
 
-        return "redirect:/";
+        return VIEWS_ROOT_REDIRECT;
     }
 
     @GetMapping("/{recipeId}/image/edit")
     public String showImageUploadForm(@PathVariable Long recipeId, Model model) {
         model.addAttribute("recipe", recipeService.findById(recipeId));
 
-        return "recipes/images/form";
+        return VIEWS_RECIPES_IMAGES_FORM;
     }
 
     @PostMapping("/{recipeId}/image")
     public String handleImagePost(@PathVariable Long recipeId, @RequestParam("imagefile") MultipartFile imageFile) {
         imageService.saveOnRecipe(recipeId, imageFile);
 
-        return "redirect:/recipes/" + recipeId;
+        return VIEWS_RECIPES_REDIRECT + recipeId;
     }
 
     @GetMapping("/{recipeId}/image")

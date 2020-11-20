@@ -78,7 +78,7 @@ class RecipeControllerTest {
         mockMvc.perform(get("/recipes/" + ID))
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipes/detail"));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_DETAIL));
 
         // then
         verify(mockRecipeService).findById(ID);
@@ -92,7 +92,7 @@ class RecipeControllerTest {
         // when
         mockMvc.perform(get("/recipes/" + ID))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("404"));
+                .andExpect(view().name(RecipeController.VIEWS_404));
     }
 
     @Test
@@ -100,7 +100,7 @@ class RecipeControllerTest {
         // when
         mockMvc.perform(get("/recipes/sterre"))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("400"));
+                .andExpect(view().name(RecipeController.VIEWS_400));
     }
 
     @Test
@@ -114,7 +114,7 @@ class RecipeControllerTest {
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
                 .andExpect(model().attribute("categories", equalTo(categoryDTOs)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipes/form"));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_FORM));
 
         // then
         verify(mockRecipeService).findById(ID);
@@ -131,7 +131,7 @@ class RecipeControllerTest {
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(model().attribute("categories", equalTo(categoryDTOs)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipes/form"));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_FORM));
 
         // then
         verify(mockCategoryService).findAll();
@@ -148,19 +148,34 @@ class RecipeControllerTest {
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("id", "")
                     .param("description", "some short description")
+                    .param("cookInstructions", "some cooking instructions")
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipes/" + ID));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_REDIRECT + ID));
 
         // then
         verify(mockRecipeService).save(any(RecipeDTO.class));
     }
 
     @Test
+    void saveRecipeFormValidationFail() throws Exception {
+        // when
+        mockMvc.perform(
+                post("/recipes")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")                        // Provide no description nor cooking instructions
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_FORM));
+
+    }
+
+    @Test
     void deleteById() throws Exception {
         mockMvc.perform(get("/recipes/" + ID + "/delete"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name(RecipeController.VIEWS_ROOT_REDIRECT));
 
         verify(mockRecipeService).deleteById(recipeDTO.getId());
     }
@@ -174,7 +189,7 @@ class RecipeControllerTest {
         mockMvc.perform(get("/recipes/1/image/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("recipe", equalTo(recipeDTO)))
-                .andExpect(view().name("recipes/images/form"));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_IMAGES_FORM));
 
         verify(mockRecipeService).findById(anyLong());
     }
@@ -189,7 +204,7 @@ class RecipeControllerTest {
         mockMvc.perform(multipart("/recipes/" + recipeId + "/image").file(mockMultipartFile))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("location", "/recipes/1"))
-                .andExpect(view().name("redirect:/recipes/" + recipeId));
+                .andExpect(view().name(RecipeController.VIEWS_RECIPES_REDIRECT + recipeId));
 
         verify(mockImageService).saveOnRecipe(anyLong(), any(MultipartFile.class));
     }
@@ -218,6 +233,6 @@ class RecipeControllerTest {
         // when
         mockMvc.perform(get("/recipes/sterre/image"))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("400"));
+                .andExpect(view().name(RecipeController.VIEWS_400));
     }
 }
