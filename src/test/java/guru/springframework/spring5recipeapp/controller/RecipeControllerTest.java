@@ -147,7 +147,7 @@ class RecipeControllerTest {
                     post("/recipes")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("id", "")
-                    .param("description", "some short description")
+                    .param("name", "some name")
                     .param("cookInstructions", "some cooking instructions")
                 )
                 .andExpect(status().is3xxRedirection())

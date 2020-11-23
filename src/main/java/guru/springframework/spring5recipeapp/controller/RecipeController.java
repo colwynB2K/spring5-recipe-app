@@ -67,12 +67,11 @@ public class RecipeController {
     }
 
     @PostMapping("")
-    public String saveRecipe(@Valid @ModelAttribute RecipeDTO recipe, BindingResult bindingResult, Model model) {   // Add @Valid to the Modelattribute parameter to trigger Bean Validation. Make sure to add the model attribute name if it doesn't match the parameter name. Add BindingResult parameters which will contains the validation result.
+    public String saveRecipe(@Valid @ModelAttribute("recipe") RecipeDTO recipe, BindingResult bindingResult) {   // Add @Valid to the Modelattribute parameter to trigger Bean Validation. Make sure to add the model attribute name if the parameter type name doesn't match the object name in the form in the th:object Thymeleaf attribute. Add BindingResult parameters which will contains the validation result.
 
         // Check validation result, log any validation errors and in that case return to the recipe form
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
-            model.addAttribute("recipe", recipe);
 
             return VIEWS_RECIPES_FORM;
         }

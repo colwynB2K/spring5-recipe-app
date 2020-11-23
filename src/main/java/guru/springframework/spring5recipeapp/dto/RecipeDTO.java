@@ -22,15 +22,17 @@ public class RecipeDTO {
     @NotBlank
     private String cookInstructions;
 
-    @NotBlank
-    @Size(min = 3, max = 255)                   // Hibernate by default creates a VARCHAR(255) so we use that as allowed max length
     private String description;
 
     @Min(1)                                     // Require minimum 1 min cooking time
     @Max(999)
     private Integer cookTimeMins;
+
     private Difficulty difficulty;
     private Byte[] image;
+
+    @NotBlank
+    @Size(min = 3, max = 255)                   // Hibernate by default creates a VARCHAR(255) so we use that as allowed max length
     private String name;
 
     @Min(1)                                     // Require minimum 1 min prep time
