@@ -51,7 +51,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <h5><label>Name:</label></h5>
+                                        <h5><label th:text="#{recipe.name}">Name:</label></h5><!--/* # makes sure it pulls the value from the message.properties */-->
                                     </div>
                                     <!--/*
                                     If there are validation errors related to the 'name' property
