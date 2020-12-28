@@ -42,6 +42,12 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <!-- MySQL Database Support -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- In-memory H2 Database Support -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
