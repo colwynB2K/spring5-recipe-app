@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sfg_dev
+    # These you could either encrypt or pull in via environment variables set on the OS
+    username: sfg_dev_user
+    password: devguru
+  jpa:
+    hibernate:
+      # Do NOT perform any DDL changes, but validate that the schema is as expected and matches the entities and relations encountered in the code
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
+    # See SQL statements in the console
+    show-sql: true
+      #properties:
+      #javax:
+      #  persistence:
+      #    schema-generation:
+      #      # Create database schema based on code metadata (so it will scan for hibernate annotations like @Entity)
+      #      create-source: metadata
+      #      scripts:
+      #        action: create
+      #        # Write the sql statements required to create the schema in target file, so you can run them from there
+      #        create-target: src/main/scripts/database_schema_create.sql

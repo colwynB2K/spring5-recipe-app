@@ -4,7 +4,7 @@
 
 # Connect to mysql and run as root user
 # Create Databases
-CREATE DATABASE sfg_prod;
+CREATE DATABASE sfg_dev;
 CREATE DATABASE sfg_prod;
 
 # Create database service accounts
