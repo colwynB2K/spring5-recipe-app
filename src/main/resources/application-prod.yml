@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sfg_prod
+    # These you could either encrypt or pull in via environment variables set on the OS
+    username: sfg_prod_user
+    password: prodguru
+    platform: mysql
+  jpa:
+    hibernate:
+      # Do NOT perform any DDL changes, but validate that the schema is as expected and matches the entities and relations encountered in the code
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
+    # See SQL statements in the console
+    show-sql: true

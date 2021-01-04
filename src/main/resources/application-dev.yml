@@ -4,6 +4,7 @@ spring:
     # These you could either encrypt or pull in via environment variables set on the OS
     username: sfg_dev_user
     password: devguru
+    platform: mysql
   jpa:
     hibernate:
       # Do NOT perform any DDL changes, but validate that the schema is as expected and matches the entities and relations encountered in the code
